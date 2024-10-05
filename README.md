@@ -23,7 +23,7 @@ DbType=mysql
 ```
 
 ## Login
-Username & Passwords are same! e.g xenon2:xenon2. The third is balance of each user. See [db.go](./db/db.go).
+Username & Passwords are same! e.g `xenon2:xenon2`. The third is balance of each user. See [db.go](./db/db.go).
 ```go
 insertTestUserInMySqlDb("xenon", "43c1cb1c1cf84a689b551d8dd1b13190", 1)
 insertTestUserInMySqlDb("xenon2", "c122ecc4ab0a41f1418689b1c444de69", 2)
