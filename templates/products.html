@@ -1,0 +1,413 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Products</title>-->
+<!--  &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+<!--  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+<!--  <style>-->
+<!--    .product-card {-->
+<!--      margin-bottom: 20px;-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container mt-5">-->
+<!--  <h1 class="text-center mb-5">Our Products</h1>-->
+<!--  <div class="row" id="product-list">-->
+<!--    &lt;!&ndash; Products will be dynamically inserted here &ndash;&gt;-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Bootstrap JS, Popper.js, and jQuery &ndash;&gt;-->
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
+<!--<script>-->
+<!--  // Fetch products from API and dynamically insert them-->
+<!--  async function fetchProducts() {-->
+<!--    try {-->
+<!--      const response = await fetch('/api/products');-->
+<!--      const products = await response.json(); // Parse the JSON response-->
+
+<!--      // Generate product cards with the received products-->
+<!--      generateProductCards(products);-->
+<!--    } catch (error) {-->
+<!--      console.error('Error fetching products:', error);-->
+<!--    }-->
+<!--  }-->
+
+<!--  // Function to generate product cards-->
+<!--  function generateProductCards(products) {-->
+<!--    const productList = document.getElementById('product-list');-->
+<!--    products.forEach(product => {-->
+<!--      // Create a column for each product-->
+<!--      const col = document.createElement('div');-->
+<!--      col.classList.add('col-md-4');-->
+
+<!--      // Create the product card-->
+<!--      const card = `-->
+<!--                    <div class="card product-card">-->
+<!--                        <img src="${product.ProductImageUrl}" class="card-img-top" alt="${product.ProductName}" style="height: 200px; object-fit: cover;">-->
+<!--                        <div class="card-body">-->
+<!--                            <h5 class="card-title">${product.ProductName}</h5>-->
+<!--                            <p class="card-text">Price: $${product.ProductPrice}</p>-->
+<!--                            <button class="btn btn-success mt-2" onclick="addToCart(${product.ProductId})">Add to Cart</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                `;-->
+
+<!--      // Insert card into the column-->
+<!--      col.innerHTML = card;-->
+<!--      productList.appendChild(col);-->
+<!--    });-->
+<!--  }-->
+
+<!--  // Function to handle Add to Cart button click-->
+<!--  async function addToCart(productId) {-->
+<!--    try {-->
+<!--      const response = await fetch('/api/products/add', {-->
+<!--        method: 'POST',-->
+<!--        headers: {-->
+<!--          'Content-Type': 'application/json', // Set the content type to JSON-->
+<!--        },-->
+<!--        body: JSON.stringify({ ProductId: productId }), // Convert the object to JSON-->
+<!--      });-->
+
+<!--      if (!response.ok) {-->
+<!--        const errorData = await response.json();-->
+<!--        alert(`Error: ${errorData.message}`); // Display error message if any-->
+<!--        return;-->
+<!--      }-->
+
+<!--      alert(`Product ${productId} added to cart successfully!`); // Success message-->
+<!--    } catch (error) {-->
+<!--      console.error('Error adding product to cart:', error);-->
+<!--      alert('An error occurred while adding the product to the cart.');-->
+<!--    }-->
+<!--  }-->
+
+<!--  // Load the products on page load-->
+<!--  document.addEventListener('DOMContentLoaded', function() {-->
+<!--    fetchProducts(); // Fetch products from the API-->
+<!--  });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Products</title>-->
+<!--  &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+<!--  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+<!--  <style>-->
+<!--    .product-card {-->
+<!--      margin-bottom: 20px;-->
+<!--    }-->
+<!--    /* Banner styles for Cart Price */-->
+<!--    .cart-banner {-->
+<!--      background-color: #f8f9fa;-->
+<!--      padding: 10px;-->
+<!--      position: relative;-->
+<!--      display: flex;-->
+<!--      justify-content: space-between;-->
+<!--      align-items: center;-->
+<!--    }-->
+<!--    .cart-price {-->
+<!--      font-weight: bold;-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Cart Banner &ndash;&gt;-->
+<!--<div class="cart-banner">-->
+<!--  <a class="btn btn-primary" href="/cart">My Cart</a>-->
+<!--  <span class="cart-price">Cart: <span id="cart-price">0$</span></span>-->
+<!--</div>-->
+
+<!--<div class="container mt-5">-->
+<!--  <h1 class="text-center mb-5">Our Products</h1>-->
+<!--  <div class="row" id="product-list">-->
+<!--    &lt;!&ndash; Products will be dynamically inserted here &ndash;&gt;-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Bootstrap JS, Popper.js, and jQuery &ndash;&gt;-->
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
+<!--<script>-->
+<!--  // Fetch products from API and dynamically insert them-->
+<!--  async function fetchProducts() {-->
+<!--    try {-->
+<!--      const response = await fetch('/api/products');-->
+<!--      const products = await response.json(); // Parse the JSON response-->
+
+<!--      // Generate product cards with the received products-->
+<!--      generateProductCards(products);-->
+<!--    } catch (error) {-->
+<!--      console.error('Error fetching products:', error);-->
+<!--    }-->
+<!--  }-->
+
+<!--  // Function to generate product cards-->
+<!--  function generateProductCards(products) {-->
+<!--    const productList = document.getElementById('product-list');-->
+<!--    products.forEach(product => {-->
+<!--      // Create a column for each product-->
+<!--      const col = document.createElement('div');-->
+<!--      col.classList.add('col-md-4');-->
+
+<!--      // Create the product card-->
+<!--      const card = `-->
+<!--                    <div class="card product-card">-->
+<!--                        <img src="${product.ProductImageUrl}" class="card-img-top" alt="${product.ProductName}" style="height: 200px; object-fit: cover;">-->
+<!--                        <div class="card-body">-->
+<!--                            <h5 class="card-title">${product.ProductName}</h5>-->
+<!--                            <p class="card-text">Price: $${product.ProductPrice}</p>-->
+<!--                            <button class="btn btn-success mt-2" onclick="addToCart(${product.ProductId})">Add to Cart</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                `;-->
+
+<!--      // Insert card into the column-->
+<!--      col.innerHTML = card;-->
+<!--      productList.appendChild(col);-->
+<!--    });-->
+<!--  }-->
+
+<!--  // Function to handle Add to Cart button click-->
+<!--  async function addToCart(productId) {-->
+<!--    try {-->
+<!--      const response = await fetch('/api/products/add', {-->
+<!--        method: 'POST',-->
+<!--        headers: {-->
+<!--          'Content-Type': 'application/json', // Set the content type to JSON-->
+<!--        },-->
+<!--        body: JSON.stringify({ ProductId: productId }), // Convert the object to JSON-->
+<!--      });-->
+
+<!--      if (!response.ok) {-->
+<!--        const errorData = await response.json();-->
+<!--        alert(`Error: ${errorData.message}`); // Display error message if any-->
+<!--        return;-->
+<!--      }-->
+
+<!--      alert(`Product ${productId} added to cart successfully!`); // Success message-->
+<!--    } catch (error) {-->
+<!--      console.error('Error adding product to cart:', error);-->
+<!--      alert('An error occurred while adding the product to the cart.');-->
+<!--    }-->
+<!--  }-->
+
+<!--  // Function to fetch and update cart price-->
+<!--  async function fetchCartPrice() {-->
+<!--    try {-->
+<!--      const response = await fetch('/api/cart');-->
+<!--      if (!response.ok) {-->
+<!--        console.error('Error fetching cart details.');-->
+<!--        return;-->
+<!--      }-->
+
+<!--      const cart = await response.json();-->
+<!--      const cartPriceElement = document.getElementById('cart-price');-->
+<!--      const currentPrice = cartPriceElement.textContent.replace('$', '');-->
+
+<!--      if (currentPrice != cart.CartOverallPrice) {-->
+<!--        cartPriceElement.textContent = `${cart.CartOverallPrice}$`;-->
+<!--      }-->
+<!--    } catch (error) {-->
+<!--      console.error('Error fetching cart price:', error);-->
+<!--    }-->
+<!--  }-->
+
+<!--  // Fetch cart price every 2 seconds-->
+<!--  setInterval(fetchCartPrice, 2000);-->
+
+<!--  // Load the products on page load-->
+<!--  document.addEventListener('DOMContentLoaded', function() {-->
+<!--    fetchProducts(); // Fetch products from the API-->
+<!--    fetchCartPrice(); // Fetch initial cart price-->
+<!--  });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .product-card {
+      margin-bottom: 20px;
+    }
+    /* Banner styles for Cart Price */
+    .cart-banner {
+      background-color: #f8f9fa;
+      padding: 10px;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-price {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Cart Banner -->
+<div class="cart-banner">
+  <a class="btn btn-primary" href="/cart">My Cart</a>
+  <div>
+    <span class="cart-price">Cart: <span id="cart-price">0$</span></span>
+    <span class="balance-text"> | Your Balance: <span id="user-balance">0$</span></span>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <h1 class="text-center mb-5">Our Products</h1>
+  <div class="row" id="product-list">
+    <!-- Products will be dynamically inserted here -->
+  </div>
+</div>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  // Fetch products from API and dynamically insert them
+  async function fetchProducts() {
+    try {
+      const response = await fetch('/api/products');
+      const products = await response.json(); // Parse the JSON response
+
+      // Generate product cards with the received products
+      generateProductCards(products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  }
+
+  // Function to generate product cards
+  function generateProductCards(products) {
+    const productList = document.getElementById('product-list');
+    products.forEach(product => {
+      // Create a column for each product
+      const col = document.createElement('div');
+      col.classList.add('col-md-4');
+
+      // Create the product card
+      const card = `
+                    <div class="card product-card">
+                        <img src="${product.ProductImageUrl}" class="card-img-top" alt="${product.ProductName}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.ProductName}</h5>
+                            <p class="card-text">Price: $${product.ProductPrice}</p>
+                            <button class="btn btn-success mt-2" onclick="addToCart(${product.ProductId})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+
+      // Insert card into the column
+      col.innerHTML = card;
+      productList.appendChild(col);
+    });
+  }
+
+  // Function to handle Add to Cart button click
+  async function addToCart(productId) {
+    try {
+      const response = await fetch('/api/products/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+        },
+        body: JSON.stringify({ ProductId: productId }), // Convert the object to JSON
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`); // Display error message if any
+        return;
+      }
+
+      alert(`Product ${productId} added to cart successfully!`); // Success message
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      alert('An error occurred while adding the product to the cart.');
+    }
+  }
+
+  // Function to fetch and update cart price
+  async function fetchCartPrice() {
+    try {
+      const response = await fetch('/api/cart');
+      if (!response.ok) {
+        console.error('Error fetching cart details.');
+        return;
+      }
+
+      const cart = await response.json();
+      const cartPriceElement = document.getElementById('cart-price');
+      const currentPrice = cartPriceElement.textContent.replace('$', '');
+
+      if (currentPrice != cart.CartOverallPrice) {
+        cartPriceElement.textContent = `${cart.CartOverallPrice}$`;
+      }
+    } catch (error) {
+      console.error('Error fetching cart price:', error);
+    }
+  }
+
+  // Function to fetch and update user balance
+  async function fetchUserBalance() {
+    try {
+      const response = await fetch('/api/balance');
+      if (!response.ok) {
+        console.error('Error fetching user balance.');
+        return;
+      }
+
+      const data = await response.json(); // Parse the JSON response
+      if (data.success) {
+        const balanceElement = document.getElementById('user-balance');
+        balanceElement.textContent = `${data.balance}$`; // Update balance display
+      } else {
+        console.error('Failed to fetch user balance.');
+      }
+    } catch (error) {
+      console.error('Error fetching user balance:', error);
+    }
+  }
+
+  // Fetch cart price and user balance every 2 seconds
+  setInterval(() => {
+    fetchCartPrice();
+    fetchUserBalance();
+  }, 2000);
+
+  // Load the products on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    fetchProducts(); // Fetch products from the API
+    fetchCartPrice(); // Fetch initial cart price
+    fetchUserBalance(); // Fetch initial user balance
+  });
+</script>
+</body>
+</html>

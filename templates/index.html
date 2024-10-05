@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            checkLoginStatus();
+        });
+
+        function checkLoginStatus() {
+            fetch('/api/login_check')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Check if the user is logged in
+                    if (data.logged_in) {
+                        // Redirect to the products page if logged in
+                        window.location.href = '/products';
+                    } else {
+                        // Redirect to the login page if not logged in
+                        window.location.href = '/login';
+                    }
+                })
+                .catch(err => {
+                    console.error("An error occurred while checking login status: ", err);
+                });
+        }
+    </script>
+</head>
+<body>
+<h1>Checking login status...</h1>
+</body>
+</html>
