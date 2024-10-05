@@ -1,5 +1,27 @@
 # HTTP/2 & HTTP/3 Race Condition Lab (Web Application)
 
+## Run the App
+
+```shell
+go run ./webapp.go
+```
+
+## .env File
+
+```env
+CertPath=CERT_PATH
+KeyPath=KEY_PATH
+H2ListenAddr=127.0.0.1:443
+H3ListenAddr=127.0.0.1:443
+KeyLogFile=LOG_PATH
+MySqlHost=IP_ADDRESS
+MySqlPort=3306
+MySqlUser=USERNAME
+MySqlPass=PASSWORD
+MySqlDbName=DB_NAME
+DbType=mysql
+```
+
 ## Login
 Username & Passwords are same! e.g xenon2:xenon2. The third is balance of each user. See [db.go](./db/db.go).
 ```go
