@@ -85,7 +85,7 @@ func MakeCartProductsTableEmpty() {
 	if err != nil {
 		panic(err)
 	}
-	log.Println("Successfully cleared all products in carts")
+	fmt.Println("Successfully cleared all products in carts")
 }
 
 func MakeCartsTableEmpty() {
@@ -96,5 +96,5 @@ func MakeCartsTableEmpty() {
 	if err != nil {
 		panic(err)
 	}
-	log.Println("Successfully cleared all carts")
+	fmt.Println("Successfully cleared all carts")
 }
