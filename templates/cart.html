@@ -1,3 +1,123 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Cart</title>-->
+<!--  &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+<!--  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+<!--  <style>-->
+<!--    .product-card {-->
+<!--      margin-bottom: 20px;-->
+<!--    }-->
+<!--    .remove-button {-->
+<!--      background-color: red;-->
+<!--      color: white;-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container mt-5">-->
+<!--  <h1 class="text-center mb-5">Your Cart</h1>-->
+<!--  <div id="cart-products-list" class="row">-->
+<!--    &lt;!&ndash; Products in the cart will be dynamically inserted here &ndash;&gt;-->
+<!--  </div>-->
+<!--  <div class="text-center mt-4">-->
+<!--    <h3>Total Cart Price: <span id="cart-price">$0</span></h3>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Bootstrap JS, Popper.js, and jQuery &ndash;&gt;-->
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
+<!--<script>-->
+<!--  // Fetch the cart data from the /api/cart endpoint-->
+<!--  async function fetchCart() {-->
+<!--    try {-->
+<!--      const response = await fetch('/api/cart');-->
+<!--      const cart = await response.json();-->
+
+<!--      // Update the cart price-->
+<!--      document.getElementById('cart-price').textContent = `$${cart.CartOverallPrice}`;-->
+
+<!--      // Generate cart product cards-->
+<!--      generateCartProductCards(cart.Products);-->
+<!--    } catch (error) {-->
+<!--      console.error('Error fetching cart:', error);-->
+<!--    }-->
+<!--  }-->
+
+<!--  // Function to generate product cards for the cart-->
+<!--  function generateCartProductCards(products) {-->
+<!--    const productList = document.getElementById('cart-products-list');-->
+<!--    productList.innerHTML = ''; // Clear the previous products-->
+
+<!--    products.forEach(product => {-->
+<!--      // Create a column for each product-->
+<!--      const col = document.createElement('div');-->
+<!--      col.classList.add('col-md-4');-->
+
+<!--      // Create the product card-->
+<!--      const card = `-->
+<!--                    <div class="card product-card">-->
+<!--                        <img src="${product.ProductImageUrl}" class="card-img-top" alt="${product.ProductName}" style="height: 200px; object-fit: cover;">-->
+<!--                        <div class="card-body">-->
+<!--                            <h5 class="card-title">${product.ProductName}</h5>-->
+<!--                            <p class="card-text">Price: $${product.ProductPrice}</p>-->
+<!--                            <button class="btn remove-button mt-2" onclick="removeProductFromCart(${product.ProductInCartId})">Remove</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                `;-->
+
+<!--      // Insert card into the column-->
+<!--      col.innerHTML = card;-->
+<!--      productList.appendChild(col);-->
+<!--    });-->
+<!--  }-->
+
+<!--  // Function to handle the remove button click-->
+<!--  async function removeProductFromCart(productInCartId) {-->
+<!--    try {-->
+<!--      const response = await fetch('/api/product/remove', {-->
+<!--        method: 'POST',-->
+<!--        headers: {-->
+<!--          'Content-Type': 'application/json',-->
+<!--        },-->
+<!--        body: JSON.stringify({ ProductInCartId: productInCartId }),-->
+<!--      });-->
+
+<!--      if (!response.ok) {-->
+<!--        const errorData = await response.json();-->
+<!--        alert(`Error: ${errorData.message}`);-->
+<!--        return;-->
+<!--      }-->
+
+<!--      // If successful, refetch the cart to update the UI-->
+<!--      fetchCart();-->
+<!--    } catch (error) {-->
+<!--      console.error('Error removing product from cart:', error);-->
+<!--      alert('An error occurred while removing the product.');-->
+<!--    }-->
+<!--  }-->
+
+<!--  // Function to continuously update the cart price every 2 seconds-->
+<!--  function continuouslyUpdateCartPrice() {-->
+<!--    setInterval(fetchCart, 2000); // Fetch the cart data every 2 seconds-->
+<!--  }-->
+
+<!--  // Load the cart data and start the continuous price update on page load-->
+<!--  document.addEventListener('DOMContentLoaded', function() {-->
+<!--    fetchCart(); // Initial cart fetch-->
+<!--    continuouslyUpdateCartPrice(); // Start auto-updating cart price-->
+<!--  });-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,14 +134,28 @@
       background-color: red;
       color: white;
     }
+    .apply-button {
+      background-color: green;
+      color: white;
+    }
   </style>
 </head>
 <body>
 <div class="container mt-5">
   <h1 class="text-center mb-5">Your Cart</h1>
+
+  <!-- Coupon Code Input and Apply Button -->
+  <div class="text-center mb-4">
+    <input type="text" id="coupon-input" class="form-control d-inline-block w-50" placeholder="Enter coupon code">
+    <button class="btn apply-button ml-2" onclick="applyCoupon()">Apply</button>
+  </div>
+
+  <!-- Product Cards -->
   <div id="cart-products-list" class="row">
     <!-- Products in the cart will be dynamically inserted here -->
   </div>
+
+  <!-- Cart Price -->
   <div class="text-center mt-4">
     <h3>Total Cart Price: <span id="cart-price">$0</span></h3>
   </div>
@@ -102,6 +236,38 @@
     }
   }
 
+  // Function to apply coupon
+  async function applyCoupon() {
+    const couponValue = document.getElementById('coupon-input').value;
+
+    if (!couponValue) {
+      alert('Please enter a coupon code.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/cart/apply_coupon', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ couponValue: couponValue }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`);
+        return;
+      }
+
+      // Refetch the cart to update the UI with the new price
+      fetchCart();
+    } catch (error) {
+      console.error('Error applying coupon:', error);
+      alert('An error occurred while applying the coupon.');
+    }
+  }
+
   // Function to continuously update the cart price every 2 seconds
   function continuouslyUpdateCartPrice() {
     setInterval(fetchCart, 2000); // Fetch the cart data every 2 seconds
@@ -116,3 +282,4 @@
 
 </body>
 </html>
+

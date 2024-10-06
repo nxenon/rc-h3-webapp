@@ -31,6 +31,8 @@ func ConnectToMySqlDatabase(appData utils.AppData) {
 }
 
 func doChecks() {
+	MakeCartProductsTableEmpty()
+	MakeCartsTableEmpty()
 	InsertDefaultUsers()
 	InsertDefaultProducts()
 	InsertDefaultCouponCodes()

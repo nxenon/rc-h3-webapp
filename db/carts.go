@@ -78,3 +78,23 @@ func UpdateCartById(cartId int, newOverallPrice int) error {
 
 	return nil
 }
+
+func MakeCartProductsTableEmpty() {
+	query := "DELETE FROM CART_PRODUCTS"
+	_, err := mysqldb.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Successfully cleared all products in carts")
+}
+
+func MakeCartsTableEmpty() {
+	query := "DELETE FROM CARTS"
+
+	// Assuming `mysqldb` is your database connection object
+	_, err := mysqldb.Exec(query)
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Successfully cleared all carts")
+}
