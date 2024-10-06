@@ -7,7 +7,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"rc-h3-webapp/models"
+	"github.com/nxenon/rc-h3-webapp/models"
 	"time"
 )
 

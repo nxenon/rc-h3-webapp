@@ -1,8 +1,8 @@
 package routes
 
 import (
+	"github.com/nxenon/rc-h3-webapp/middlewares"
 	"net/http"
-	"rc-h3-webapp/middlewares"
 )
 
 var routesWithHandlers = make(map[string]func(http.ResponseWriter, *http.Request))

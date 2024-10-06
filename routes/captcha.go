@@ -5,8 +5,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"github.com/dchest/captcha"
+	"github.com/nxenon/rc-h3-webapp/models"
 	"net/http"
-	"rc-h3-webapp/models"
 )
 
 // CaptchaRouteHandler /api/captcha

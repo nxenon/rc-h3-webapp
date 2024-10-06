@@ -2,8 +2,8 @@ package middlewares
 
 import (
 	"context"
+	"github.com/nxenon/rc-h3-webapp/utils"
 	"net/http"
-	"rc-h3-webapp/utils"
 )
 
 func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {

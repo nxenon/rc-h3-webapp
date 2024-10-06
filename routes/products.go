@@ -3,10 +3,10 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/nxenon/rc-h3-webapp/db"
+	"github.com/nxenon/rc-h3-webapp/models"
+	"github.com/nxenon/rc-h3-webapp/utils"
 	"net/http"
-	"rc-h3-webapp/db"
-	"rc-h3-webapp/models"
-	"rc-h3-webapp/utils"
 	"strings"
 )
 

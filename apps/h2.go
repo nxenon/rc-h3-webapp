@@ -2,9 +2,9 @@ package apps
 
 import (
 	"fmt"
+	"github.com/nxenon/rc-h3-webapp/routes"
+	"github.com/nxenon/rc-h3-webapp/utils"
 	"net/http"
-	"rc-h3-webapp/routes"
-	"rc-h3-webapp/utils"
 )
 
 func StartHttp2Server(appData utils.AppData) {

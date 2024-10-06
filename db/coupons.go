@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"rc-h3-webapp/models"
+	"github.com/nxenon/rc-h3-webapp/models"
 )
 
 func InsertOrUpdateCouponCode(isValid bool, discountPercent int, couponValue string) error {

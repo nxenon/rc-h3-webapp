@@ -2,8 +2,8 @@ package routes
 
 import (
 	"fmt"
+	"github.com/nxenon/rc-h3-webapp/utils"
 	"net/http"
-	"rc-h3-webapp/utils"
 	"strings"
 )
 

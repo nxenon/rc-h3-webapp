@@ -3,8 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"github.com/nxenon/rc-h3-webapp/models"
 	"log"
-	"rc-h3-webapp/models"
 )
 
 // Check if a product exists and insert if it doesn't

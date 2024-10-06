@@ -1,10 +1,12 @@
-module rc-h3-webapp
+module github.com/nxenon/rc-h3-webapp
 
 go 1.22.0
 
 toolchain go1.22.8
 
 require (
+	github.com/dchest/captcha v1.0.0
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/joho/godotenv v1.5.1
 	github.com/quic-go/quic-go v0.47.0
@@ -12,8 +14,6 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/dchest/captcha v1.0.0 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/pprof v0.0.0-20241001023024-f4c0cfd0cf1d // indirect
 	github.com/onsi/ginkgo/v2 v2.20.2 // indirect

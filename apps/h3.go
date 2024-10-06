@@ -3,11 +3,11 @@ package apps
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/nxenon/rc-h3-webapp/routes"
+	"github.com/nxenon/rc-h3-webapp/utils"
 	"github.com/quic-go/quic-go"
 	"github.com/quic-go/quic-go/http3"
 	"net/http"
-	"rc-h3-webapp/routes"
-	"rc-h3-webapp/utils"
 )
 
 func StartHttp3Server(appData utils.AppData) {

@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/nxenon/rc-h3-webapp/apps"
+	"github.com/nxenon/rc-h3-webapp/db"
+	"github.com/nxenon/rc-h3-webapp/routes"
+	"github.com/nxenon/rc-h3-webapp/utils"
 	"os"
-	"rc-h3-webapp/apps"
-	"rc-h3-webapp/db"
-	"rc-h3-webapp/routes"
-	"rc-h3-webapp/utils"
 )
 
 var AppData utils.AppData

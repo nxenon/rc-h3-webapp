@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"rc-h3-webapp/utils"
+	"github.com/nxenon/rc-h3-webapp/utils"
 )
 
 var mysqldb *sql.DB
