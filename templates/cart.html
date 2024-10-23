@@ -143,6 +143,10 @@
 <body>
 <div class="container mt-5">
   <h1 class="text-center mb-5">Your Cart</h1>
+  <h5 class="text-center" style="font-size: 16px" id="jwttoken"></h5>
+  <script>
+    document.getElementById("jwttoken").innerText = document.cookie
+  </script>
 
   <!-- Coupon Code Input and Apply Button -->
   <div class="text-center mb-4">

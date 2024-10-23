@@ -6,6 +6,7 @@ import (
 	"github.com/nxenon/rc-h3-webapp/db"
 	"github.com/nxenon/rc-h3-webapp/models"
 	"github.com/nxenon/rc-h3-webapp/utils"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -53,9 +54,17 @@ func myCartRouteHandler(w http.ResponseWriter, r *http.Request) {
 func applyCouponRouteHandler(w http.ResponseWriter, r *http.Request) {
 	// Step 1: Decode the JSON body to get the couponValue
 	var request models.ApplyCouponRequest
-	err := json.NewDecoder(r.Body).Decode(&request)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		http.Error(w, "Unable to read request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	err = json.Unmarshal(body, &request)
+	if err != nil {
+		x := fmt.Sprintf("Error decoding JSON: %s", err)
+		http.Error(w, x, http.StatusNotFound)
 		return
 	}
 
@@ -67,13 +76,14 @@ func applyCouponRouteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	coupon, err := db.GetCouponByValue(request.CouponValue)
+	invalidCouponMsg := "Invalid Coupon Code!"
 	if err != nil {
-		http.Error(w, "Invalid Coupon Code!", http.StatusNotFound)
+		http.Error(w, invalidCouponMsg, http.StatusNotFound)
 		return
 	}
 
 	if coupon.IsValid != 1 {
-		http.Error(w, "Invalid Coupon Code!", http.StatusNotFound)
+		http.Error(w, invalidCouponMsg, http.StatusNotFound)
 		return
 	}
 

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/nxenon/rc-h3-webapp/routes"
 	"github.com/nxenon/rc-h3-webapp/utils"
-	"github.com/quic-go/quic-go"
 	"github.com/quic-go/quic-go/http3"
 	"net/http"
 )
@@ -26,7 +25,7 @@ func StartHttp3Server(appData utils.AppData) {
 	if err != nil {
 		panic(err)
 	}
-	quicConf := &quic.Config{}
+	//quicConf := &quic.Config{}
 
 	mux := http.NewServeMux()
 	server := http3.Server{
@@ -37,7 +36,7 @@ func StartHttp3Server(appData utils.AppData) {
 			Certificates: []tls.Certificate{cert},
 			NextProtos:   []string{"h3"},
 		}),
-		QUICConfig: quicConf,
+		//QUICConfig: quicConf,
 	}
 
 	routes.HandleRoutes(mux)
