@@ -55,6 +55,16 @@ func InsertOrUpdateCouponCodeInMySqlDb(isValid bool, discountPercent int, coupon
 }
 
 func GetCouponByValue(couponValue string) (models.CouponCode, error) {
+	if dbType == "mysql" {
+		return GetCouponByValueInMySqlDb(couponValue)
+	} else if dbType == "redis" {
+		return GetCouponByValueInRedisDb(couponValue)
+	} else {
+		panic(fmt.Sprintf("Invalid Db Type: %s", dbType))
+	}
+}
+
+func GetCouponByValueInMySqlDb(couponValue string) (models.CouponCode, error) {
 	var coupon models.CouponCode
 
 	query := `SELECT COUPON_ID, IS_VALID, DISCOUNT_PERCENT, COUPON_VALUE FROM COUPONS WHERE COUPON_VALUE = ?`
@@ -68,4 +78,8 @@ func GetCouponByValue(couponValue string) (models.CouponCode, error) {
 	}
 
 	return coupon, nil
+}
+
+func GetCouponByValueInRedisDb(couponValue string) (models.CouponCode, error) {
+	return models.CouponCode{}, nil
 }
