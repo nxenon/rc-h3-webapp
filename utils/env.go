@@ -19,10 +19,16 @@ type AppData struct {
 	MySqlUser    string
 	MySqlPass    string
 	MySqlDbName  string
+	RedisAddr    string
+	RedisDbPass  string
+	RedisDbID    int
 	DbType       string
 }
 
 func LoadEnvFile(fileName string) AppData {
+	if fileName == "" {
+		fileName = ".env"
+	}
 	// Load .env file
 	err := godotenv.Load(fileName)
 
@@ -46,12 +52,21 @@ func LoadEnvFile(fileName string) AppData {
 	MySqlUser := os.Getenv("MySqlUser")
 	MySqlPass := os.Getenv("MySqlPass")
 	MySqlDbName := os.Getenv("MySqlDbName")
+	RedisAddr := os.Getenv("RedisAddr")
+	RedisDbPass := os.Getenv("RedisDbPass")
+	RedisDbID := os.Getenv("RedisDbID")
 	DbType := os.Getenv("DbType")
 
 	MySqlPortInt, err3 := strconv.Atoi(MySqlPort)
 	if err3 != nil {
 		fmt.Println("MySqlPort is not integer")
 		panic(err3)
+	}
+
+	RedisDbIDInt, err2 := strconv.Atoi(RedisDbID)
+	if err2 != nil {
+		fmt.Println("ReidsDbID is not integer")
+		panic(err2)
 	}
 
 	return AppData{
@@ -66,6 +81,9 @@ func LoadEnvFile(fileName string) AppData {
 		MySqlUser:    MySqlUser,
 		MySqlPass:    MySqlPass,
 		MySqlDbName:  MySqlDbName,
+		RedisAddr:    RedisAddr,
+		RedisDbPass:  RedisDbPass,
+		RedisDbID:    RedisDbIDInt,
 		DbType:       DbType,
 	}
 
@@ -80,7 +98,7 @@ func CreateEnvFile(fileName string) error {
 	defer file.Close()
 
 	// Write default environment variables to .env file
-	envContent := "CertPath=\nKeyPath=\nH2ListenAddr=127.0.0.1:443\nH3ListenAddr=127.0.0.1:443\nKeyLogFile=h3_quic.log\nMySqlHost=127.0.0.1\nMySqlPort=3306\nMySqlUser=\nMySqlPass=\nMySqlDbName=\nDbType=mysql\n"
+	envContent := "CertPath=\nKeyPath=\nH2ListenAddr=127.0.0.1:443\nH3ListenAddr=127.0.0.1:443\nKeyLogFile=h3_quic.log\nMySqlHost=127.0.0.1\nMySqlPort=3306\nMySqlUser=\nMySqlPass=\nMySqlDbName=\nDbType=mysql\nRedisAddr=127.0.0.1:6379\nRedisDbPass=\nRedisDbID=0"
 	_, err = file.WriteString(envContent)
 	if err != nil {
 		return err

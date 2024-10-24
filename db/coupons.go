@@ -7,6 +7,23 @@ import (
 )
 
 func InsertOrUpdateCouponCode(isValid bool, discountPercent int, couponValue string) error {
+
+	if dbType == "mysql" {
+		return InsertOrUpdateCouponCodeInMySqlDb(isValid, discountPercent, couponValue)
+	} else if dbType == "redis" {
+		return InsertOrUpdateCouponCodeInRedisDb(isValid, discountPercent, couponValue)
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+
+}
+
+func InsertOrUpdateCouponCodeInRedisDb(isValid bool, discountPercent int, couponValue string) error {
+	// todo
+	return nil
+}
+
+func InsertOrUpdateCouponCodeInMySqlDb(isValid bool, discountPercent int, couponValue string) error {
 	// Check if the coupon already exists
 	var couponId int
 	query := `SELECT COUPON_ID FROM COUPONS WHERE COUPON_VALUE = ?`

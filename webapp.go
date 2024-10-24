@@ -18,6 +18,8 @@ func main() {
 
 	if AppData.DbType == "mysql" {
 		db.ConnectToMySqlDatabase(AppData)
+	} else if AppData.DbType == "redis" {
+		db.ConnectToRedisDatabase(AppData)
 	} else {
 		fmt.Println("Invalid Database Type: ", AppData.DbType)
 		fmt.Println("Valid Database types: mysql")

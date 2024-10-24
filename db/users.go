@@ -39,6 +39,21 @@ func insertTestUserInMySqlDb(username, passwordHash string, balance int) error {
 	return nil
 }
 
+func insertTestUserInMyRedisDb(username, passwordHash string, balance int) error {
+	// todo
+	return nil
+}
+
+func insertTestUserInDb(username, passwordHash string, balance int) error {
+	if dbType == "mysql" {
+		return insertTestUserInMySqlDb(username, passwordHash, balance)
+	} else if dbType == "redis" {
+		return insertTestUserInMyRedisDb(username, passwordHash, balance)
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+}
+
 func GetUserObjectByUsername(username string) (models.UserObject, error) {
 	// Query to get user info by username
 	query := `SELECT USER_ID, USERNAME, PASSWORD_HASH, BALANCE FROM USERS WHERE USERNAME = ?`

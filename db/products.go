@@ -9,6 +9,16 @@ import (
 
 // Check if a product exists and insert if it doesn't
 func addProductIfNotExists(productName string, productPrice int, imageURL string) error {
+	if dbType == "mysql" {
+		return addProductInMySqlDbIfNotExists(productName, productPrice, imageURL)
+	} else if dbType == "redis" {
+		return addProductInRedisDbIfNotExists(productName, productPrice, imageURL)
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+}
+
+func addProductInMySqlDbIfNotExists(productName string, productPrice int, imageURL string) error {
 	var exists bool
 	query := `SELECT EXISTS(SELECT 1 FROM PRODUCTS WHERE PRODUCT_NAME = ?)`
 
@@ -39,7 +49,22 @@ func addProductIfNotExists(productName string, productPrice int, imageURL string
 	return nil
 }
 
+func addProductInRedisDbIfNotExists(productName string, productPrice int, imageURL string) error {
+	// todo
+	return nil
+}
+
 func GetProduct(productId int) (models.ProductObject, error) {
+	if dbType == "mysql" {
+		return GetProductInMySqlDb(productId)
+	} else if dbType == "redis" {
+		return GetProductInRedisDb(productId)
+	} else {
+		panic(fmt.Sprintf("Invalid Db Type: %s", dbType))
+	}
+}
+
+func GetProductInMySqlDb(productId int) (models.ProductObject, error) {
 	// Query to get user info by username
 	query := `SELECT PRODUCT_ID, PRODUCT_NAME, PRODUCT_PRICE, IMAGE_URL FROM PRODUCTS WHERE PRODUCT_ID = ?`
 
@@ -59,7 +84,23 @@ func GetProduct(productId int) (models.ProductObject, error) {
 	return product, nil
 }
 
+func GetProductInRedisDb(productId int) (models.ProductObject, error) {
+	// Query to get user info by username
+	// todo
+	return models.ProductObject{}, nil
+}
+
 func GetAllProducts() ([]models.ProductObject, error) {
+	if dbType == "mysql" {
+		return GetAllProductsInMySqlDb()
+	} else if dbType == "redis" {
+		return GetAllProductsInRedisDb()
+	} else {
+		panic(fmt.Sprintf("Invalid Db Type: %s", dbType))
+	}
+}
+
+func GetAllProductsInMySqlDb() ([]models.ProductObject, error) {
 	// Query to get all products
 	query := `SELECT PRODUCT_ID, PRODUCT_NAME, PRODUCT_PRICE, IMAGE_URL FROM PRODUCTS`
 
@@ -92,7 +133,23 @@ func GetAllProducts() ([]models.ProductObject, error) {
 	return products, nil
 }
 
+func GetAllProductsInRedisDb() ([]models.ProductObject, error) {
+	// todo
+	return []models.ProductObject{}, nil
+}
+
 func AddProductToUserCart(userId, productId int) error {
+
+	if dbType == "mysql" {
+		return AddProductToUserCartInMySqlDb(userId, productId)
+	} else if dbType == "redis" {
+		return AddProductToUserCartInRedisDb(userId, productId)
+	} else {
+		panic(fmt.Sprintf("Invalid Db Type: %s", dbType))
+	}
+}
+
+func AddProductToUserCartInMySqlDb(userId, productId int) error {
 
 	// Check if user has an existing cart
 	var cart models.Cart
@@ -138,7 +195,24 @@ func AddProductToUserCart(userId, productId int) error {
 	return nil
 }
 
+func AddProductToUserCartInRedisDb(userId, productId int) error {
+
+	// Check if user has an existing cart
+	// todo
+	return nil
+}
+
 func RemoveProductFromCartByPRODUCT_IN_CART_ID(productInCartId int, cartId int) error {
+	if dbType == "mysql" {
+		return RemoveProductFromCartByPRODUCT_IN_CART_IDInMySqlDb(productInCartId, cartId)
+	} else if dbType == "redis" {
+		return RemoveProductFromCartByPRODUCT_IN_CART_IDInRedisDb(productInCartId, cartId)
+	} else {
+		panic(fmt.Sprintf("Invalid Db Type: %s", dbType))
+	}
+}
+
+func RemoveProductFromCartByPRODUCT_IN_CART_IDInMySqlDb(productInCartId int, cartId int) error {
 	query := "DELETE FROM CART_PRODUCTS WHERE PRODUCT_IN_CART_ID = ? AND CART_ID = ?"
 	// Execute the query
 	result, err := mysqldb.Exec(query, productInCartId, cartId)
@@ -161,7 +235,22 @@ func RemoveProductFromCartByPRODUCT_IN_CART_ID(productInCartId int, cartId int) 
 	return nil
 }
 
+func RemoveProductFromCartByPRODUCT_IN_CART_IDInRedisDb(productInCartId int, cartId int) error {
+	// todo
+	return nil
+}
+
 func GetProductFromPRODUCT_IN_CART_ID(productInCartId int) (models.ProductObject, error) {
+	if dbType == "mysql" {
+		return GetProductFromPRODUCT_IN_CART_IDInMySqlDb(productInCartId)
+	} else if dbType == "redis" {
+		return GetProductFromPRODUCT_IN_CART_IDInRedisDb(productInCartId)
+	} else {
+		panic(fmt.Sprintf("Invalid Db Type: %s", dbType))
+	}
+}
+
+func GetProductFromPRODUCT_IN_CART_IDInMySqlDb(productInCartId int) (models.ProductObject, error) {
 	var product models.ProductObject
 	err := mysqldb.QueryRow(`
 		SELECT 
@@ -186,4 +275,9 @@ func GetProductFromPRODUCT_IN_CART_ID(productInCartId int) (models.ProductObject
 	product.ProductInCartId = productInCartId
 
 	return product, nil
+}
+
+func GetProductFromPRODUCT_IN_CART_IDInRedisDb(productInCartId int) (models.ProductObject, error) {
+	// todo
+	return models.ProductObject{}, nil
 }
