@@ -8,6 +8,16 @@ import (
 )
 
 func GetCartIdByUserId(userId int) (int, error) {
+	if dbType == "mysql" {
+		return GetCartIdByUserIdInMySqlDb(userId)
+	} else if dbType == "redis" {
+		return GetCartIdByUserIdInRedisDb(userId)
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+}
+
+func GetCartIdByUserIdInMySqlDb(userId int) (int, error) {
 	var cartId int
 
 	// Query to get the cart ID for the specified user ID
@@ -24,7 +34,21 @@ func GetCartIdByUserId(userId int) (int, error) {
 	return cartId, nil // Return the found cart ID and nil error
 }
 
+func GetCartIdByUserIdInRedisDb(userId int) (int, error) {
+	return 0, nil
+}
+
 func GetCartById(cartId int) (models.Cart, error) {
+	if dbType == "mysql" {
+		return GetCartByIdInMySqlDb(cartId)
+	} else if dbType == "redis" {
+		return GetCartByIdInRedisDb(cartId)
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+}
+
+func GetCartByIdInMySqlDb(cartId int) (models.Cart, error) {
 	var cart models.Cart
 
 	// Get the cart details
@@ -66,7 +90,21 @@ func GetCartById(cartId int) (models.Cart, error) {
 	return cart, nil // Return the cart object and nil error
 }
 
+func GetCartByIdInRedisDb(cartId int) (models.Cart, error) {
+	return models.Cart{}, nil
+}
+
 func UpdateCartById(cartId int, newOverallPrice int) error {
+	if dbType == "mysql" {
+		return UpdateCartByIdInMysqlDb(cartId, newOverallPrice)
+	} else if dbType == "redis" {
+		return UpdateCartByIdInRedisDb(cartId, newOverallPrice)
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+}
+
+func UpdateCartByIdInMysqlDb(cartId int, newOverallPrice int) error {
 	// Update query to update the cart's overall price
 	updateQuery := `UPDATE CARTS SET CART_OVERAL_PRICE = ? WHERE CART_ID = ?`
 
@@ -79,7 +117,22 @@ func UpdateCartById(cartId int, newOverallPrice int) error {
 	return nil
 }
 
+func UpdateCartByIdInRedisDb(cartId int, newOverallPrice int) error {
+	// todo
+	return nil
+}
+
 func MakeCartProductsTableEmpty() {
+	if dbType == "mysql" {
+		MakeCartProductsTableEmptyInMysqlDb()
+	} else if dbType == "redis" {
+		MakeCartProductsTableEmptyInRedisDb()
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+}
+
+func MakeCartProductsTableEmptyInMysqlDb() {
 	query := "DELETE FROM CART_PRODUCTS"
 	_, err := mysqldb.Exec(query)
 	if err != nil {
@@ -88,7 +141,21 @@ func MakeCartProductsTableEmpty() {
 	fmt.Println("Successfully cleared all products in carts")
 }
 
+func MakeCartProductsTableEmptyInRedisDb() {
+	// todo
+}
+
 func MakeCartsTableEmpty() {
+	if dbType == "mysql" {
+		MakeCartsTableEmptyInMysqlDb()
+	} else if dbType == "redis" {
+		MakeCartsTableEmptyInRedisDb()
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+}
+
+func MakeCartsTableEmptyInMysqlDb() {
 	query := "DELETE FROM CARTS"
 
 	// Assuming `mysqldb` is your database connection object
@@ -97,4 +164,8 @@ func MakeCartsTableEmpty() {
 		panic(err)
 	}
 	fmt.Println("Successfully cleared all carts")
+}
+
+func MakeCartsTableEmptyInRedisDb() {
+	//todo
 }
