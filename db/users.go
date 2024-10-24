@@ -6,6 +6,16 @@ import (
 	"github.com/nxenon/rc-h3-webapp/models"
 )
 
+func insertTestUserInDb(username, passwordHash string, balance int) error {
+	if dbType == "mysql" {
+		return insertTestUserInMySqlDb(username, passwordHash, balance)
+	} else if dbType == "redis" {
+		return insertTestUserInMyRedisDb(username, passwordHash, balance)
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+}
+
 func insertTestUserInMySqlDb(username, passwordHash string, balance int) error {
 	// Check if a user exists and insert if it doesn't
 
@@ -44,17 +54,17 @@ func insertTestUserInMyRedisDb(username, passwordHash string, balance int) error
 	return nil
 }
 
-func insertTestUserInDb(username, passwordHash string, balance int) error {
+func GetUserObjectByUsername(username string) (models.UserObject, error) {
 	if dbType == "mysql" {
-		return insertTestUserInMySqlDb(username, passwordHash, balance)
+		return GetUserObjectByUsernameInMySqlDb(username)
 	} else if dbType == "redis" {
-		return insertTestUserInMyRedisDb(username, passwordHash, balance)
+		return GetUserObjectByUsernameInRedisDb(username)
 	} else {
 		panic(fmt.Sprintf("invalid DB type: %s", dbType))
 	}
 }
 
-func GetUserObjectByUsername(username string) (models.UserObject, error) {
+func GetUserObjectByUsernameInMySqlDb(username string) (models.UserObject, error) {
 	// Query to get user info by username
 	query := `SELECT USER_ID, USERNAME, PASSWORD_HASH, BALANCE FROM USERS WHERE USERNAME = ?`
 
@@ -74,7 +84,22 @@ func GetUserObjectByUsername(username string) (models.UserObject, error) {
 	return user, nil
 }
 
+func GetUserObjectByUsernameInRedisDb(username string) (models.UserObject, error) {
+	// todo
+	return models.UserObject{}, nil
+}
+
 func GetUserObjectByUserId(userId int) (models.UserObject, error) {
+	if dbType == "mysql" {
+		return GetUserObjectByUserIdInMysqlDb(userId)
+	} else if dbType == "redis" {
+		return GetUserObjectByUserIdInRedisDb(userId)
+	} else {
+		panic(fmt.Sprintf("invalid DB type: %s", dbType))
+	}
+}
+
+func GetUserObjectByUserIdInMysqlDb(userId int) (models.UserObject, error) {
 	// Query to get user info by username
 	query := `SELECT USER_ID, USERNAME, PASSWORD_HASH, BALANCE FROM USERS WHERE USER_ID = ?`
 
@@ -92,4 +117,9 @@ func GetUserObjectByUserId(userId int) (models.UserObject, error) {
 	}
 
 	return user, nil
+}
+
+func GetUserObjectByUserIdInRedisDb(userId int) (models.UserObject, error) {
+	// todo
+	return models.UserObject{}, nil
 }
