@@ -30,7 +30,6 @@ func ConnectToMySqlDatabase(appData utils.AppData) {
 	mysqldb = db
 	//defer db.Close()
 
-	doChecks(appData)
 }
 
 func doChecks(appData utils.AppData) {

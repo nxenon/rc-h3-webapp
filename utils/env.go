@@ -98,7 +98,7 @@ func CreateEnvFile(fileName string) error {
 	defer file.Close()
 
 	// Write default environment variables to .env file
-	envContent := "CertPath=\nKeyPath=\nH2ListenAddr=127.0.0.1:443\nH3ListenAddr=127.0.0.1:443\nKeyLogFile=h3_quic.log\nMySqlHost=127.0.0.1\nMySqlPort=3306\nMySqlUser=\nMySqlPass=\nMySqlDbName=\nDbType=mysql\nRedisAddr=127.0.0.1:6379\nRedisDbPass=\nRedisDbID=0"
+	envContent := "CertPath=\nKeyPath=\nH2ListenAddr=127.0.0.1:443\nH3ListenAddr=127.0.0.1:443\nKeyLogFile=h3_quic.log\nMySqlHost=127.0.0.1\nMySqlPort=3306\nMySqlUser=\nMySqlPass=\nMySqlDbName=\nDbType=mysql+redis\nRedisAddr=127.0.0.1:6379\nRedisDbPass=\nRedisDbID=0"
 	_, err = file.WriteString(envContent)
 	if err != nil {
 		return err

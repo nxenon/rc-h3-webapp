@@ -8,7 +8,6 @@ type Cart struct {
 }
 
 type MyCartResponse struct {
-	CartId           int             `json:"cart_id"`
 	UserId           int             `json:"user_id"`
 	CartOverallPrice int             `json:"cart_overall_price"`
 	Products         []ProductObject `json:"products"`

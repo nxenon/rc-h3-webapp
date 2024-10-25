@@ -76,32 +76,15 @@ func removeProductHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userCartId, err := db.GetCartIdByUserId(userId)
-	if err != nil {
-		http.Error(w, "Error getting cart by user id!", http.StatusInternalServerError)
-		return
-	}
-	userCartObject, err := db.GetCartById(userCartId)
-	if err != nil {
-		http.Error(w, "Error getting cart by cart id!", http.StatusInternalServerError)
-		return
-	}
-
-	userProduct, err3 := db.GetProductFromPRODUCT_IN_CART_ID(req.ProductInCartId)
-	if err3 != nil {
-		http.Error(w, "Error getting product from PRODUCT_IN_CART_ID!", http.StatusInternalServerError)
-		return
-	}
-
 	// remove product from user cart by models.RemoveProductRequest.ProductInCartId
-	err2 := db.RemoveProductFromCartByPRODUCT_IN_CART_ID(req.ProductInCartId, userCartObject.CartId)
+	err2 := db.RemoveProductFromCartByUserId(req.ProductInCartUUID, userId)
 	if err2 != nil {
 		http.Error(w, "Error removing product from cart!", http.StatusInternalServerError)
 		return
 	}
 
 	// update cart overall price
-	db.UpdateCartById(userCartObject.CartId, userCartObject.CartOverallPrice-userProduct.ProductPrice)
+	//db.UpdateCartById(userCartObject.CartId, userCartObject.CartOverallPrice-userProduct.ProductPrice)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Product removed from cart successfully"))

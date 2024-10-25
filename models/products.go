@@ -1,11 +1,12 @@
 package models
 
 type ProductObject struct {
-	ProductId       int
-	ProductName     string
-	ProductPrice    int
-	ProductImageUrl string
-	ProductInCartId int
+	ProductId         int
+	ProductName       string
+	ProductPrice      int
+	ProductImageUrl   string
+	ProductInCartId   int
+	ProductInCartUUID string
 }
 
 type AddProductRequest struct {
@@ -13,5 +14,5 @@ type AddProductRequest struct {
 }
 
 type RemoveProductRequest struct {
-	ProductInCartId int `json:"ProductInCartId"`
+	ProductInCartUUID string `json:"ProductInCartUUID"`
 }

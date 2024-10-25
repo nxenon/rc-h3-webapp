@@ -27,13 +27,7 @@ func myCartRouteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userCartId, err := db.GetCartIdByUserId(userId)
-	if err != nil {
-		http.Error(w, "Error getting Cart ID by User ID!", http.StatusInternalServerError)
-		return
-	}
-
-	userCart, err := db.GetCartById(userCartId)
+	userCart, err := db.GetCartByUserId(userId)
 	if err != nil {
 		http.Error(w, "Error getting Cart by cart id!", http.StatusInternalServerError)
 		return
@@ -87,20 +81,17 @@ func applyCouponRouteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userCartId, err := db.GetCartIdByUserId(userId)
-	if err != nil {
-		http.Error(w, "Error getting user cart!", http.StatusInternalServerError)
-		return
-	}
-	userCartObject, err4 := db.GetCartById(userCartId)
+	userCartObject, err4 := db.GetCartByUserId(userId)
 	if err4 != nil {
-		http.Error(w, "Error getting user cart by id!", http.StatusInternalServerError)
+		http.Error(w, "Error getting user cart by user id!", http.StatusInternalServerError)
 		return
 	}
 
 	// update user cart
 	newPrice := CalculateDiscountedPrice(userCartObject.CartOverallPrice, coupon.DiscountPercent)
-	err3 := db.UpdateCartById(userCartId, newPrice)
+	userCartObject.CartOverallPrice = newPrice
+
+	err3 := db.UpdateCartByUserId(userId, userCartObject)
 	if err3 != nil {
 		http.Error(w, "Error Updating User Cart Overall price!", http.StatusInternalServerError)
 		return
@@ -112,6 +103,7 @@ func applyCouponRouteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error Updating Coupon Code!", http.StatusInternalServerError)
 		return
 	}
+
 	response := map[string]interface{}{
 		"success": true,
 		"message": "Coupon Applied Successfully",

@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/nxenon/rc-h3-webapp/models"
 	"log"
 )
@@ -141,12 +142,11 @@ func GetAllProductsInRedisDb() ([]models.ProductObject, error) {
 func AddProductToUserCart(userId, productId int) error {
 
 	if dbType == "mysql" {
-		return AddProductToUserCartInMySqlDb(userId, productId)
-	} else if dbType == "redis" {
 		return AddProductToUserCartInRedisDb(userId, productId)
 	} else {
 		panic(fmt.Sprintf("Invalid Db Type: %s", dbType))
 	}
+
 }
 
 func AddProductToUserCartInMySqlDb(userId, productId int) error {
@@ -197,19 +197,64 @@ func AddProductToUserCartInMySqlDb(userId, productId int) error {
 
 func AddProductToUserCartInRedisDb(userId, productId int) error {
 
-	// Check if user has an existing cart
-	// todo
-	return nil
+	userCart, err := GetCartByUserIdInRedisDb(userId)
+	if err != nil {
+		return err
+	}
+
+	p, err2 := GetProductInMySqlDb(productId)
+	if err2 != nil {
+		return err2
+	}
+
+	p.ProductInCartUUID = uuid.New().String()
+
+	userCart.Products = append(userCart.Products, p)
+	userCart.CartOverallPrice = userCart.CartOverallPrice + p.ProductPrice
+
+	return UpdateCartByUserId(userId, userCart)
+
 }
 
-func RemoveProductFromCartByPRODUCT_IN_CART_ID(productInCartId int, cartId int) error {
+//
+//func RemoveProductFromCartByPRODUCT_IN_CART_ID(productInCartId int, cartId int) error {
+//	if dbType == "mysql" {
+//		return RemoveProductFromCartByPRODUCT_IN_CART_IDInMySqlDb(productInCartId, cartId)
+//	} else if dbType == "redis" {
+//		return RemoveProductFromCartByPRODUCT_IN_CART_IDInRedisDb(productInCartId, cartId)
+//	} else {
+//		panic(fmt.Sprintf("Invalid Db Type: %s", dbType))
+//	}
+//}
+
+func RemoveProductFromCartByUserId(productInCartUUID string, userId int) error {
 	if dbType == "mysql" {
-		return RemoveProductFromCartByPRODUCT_IN_CART_IDInMySqlDb(productInCartId, cartId)
-	} else if dbType == "redis" {
-		return RemoveProductFromCartByPRODUCT_IN_CART_IDInRedisDb(productInCartId, cartId)
+		return RemoveProductFromCartByUserIdInRedisDb(productInCartUUID, userId)
 	} else {
 		panic(fmt.Sprintf("Invalid Db Type: %s", dbType))
 	}
+}
+
+func RemoveProductFromCartByUserIdInRedisDb(productInCartUUID string, userId int) error {
+
+	userCart, err := GetCartByUserId(userId)
+	if err != nil {
+		return err
+	}
+
+	var tempProducts []models.ProductObject
+	for _, p := range userCart.Products {
+		if p.ProductInCartUUID != productInCartUUID {
+			tempProducts = append(tempProducts, p)
+		} else {
+			userCart.CartOverallPrice -= p.ProductPrice
+		}
+	}
+
+	userCart.Products = tempProducts
+	err2 := UpdateCartByUserIdInRedisDb(userId, userCart)
+	return err2
+
 }
 
 func RemoveProductFromCartByPRODUCT_IN_CART_IDInMySqlDb(productInCartId int, cartId int) error {
