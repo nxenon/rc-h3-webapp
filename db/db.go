@@ -32,7 +32,7 @@ func ConnectToMySqlDatabase(appData utils.AppData) {
 
 }
 
-func doChecks(appData utils.AppData) {
+func DoChecks(appData utils.AppData) {
 	MakeCartProductsTableEmpty()
 	MakeCartsTableEmpty()
 	InsertDefaultUsers()
@@ -96,5 +96,5 @@ func ConnectToRedisDatabase(appData utils.AppData) {
 
 	redisDb = rdb
 
-	doChecks(appData)
+	DoChecks(appData)
 }

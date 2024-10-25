@@ -29,6 +29,8 @@
 <!-- Cart Banner -->
 <div class="cart-banner">
   <a class="btn btn-primary" href="/cart">My Cart</a>
+  <button class="btn btn-danger" id="restart-all-button">Restart All</button>
+
   <div>
     <span class="cart-price">Cart: <span id="cart-price">0$</span></span>
     <span class="balance-text"> | Your Balance: <span id="user-balance">0$</span></span>
@@ -165,6 +167,28 @@
     fetchCartPrice(); // Fetch initial cart price
     fetchUserBalance(); // Fetch initial user balance
   });
+
+  async function restartAll() {
+    try {
+      const response = await fetch('/api/restart_all', {
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`);
+        return;
+      }
+
+      // Optionally handle a successful response
+    } catch (error) {
+      console.error('Error sending restart request:', error);
+      alert('An error occurred while sending the restart request.');
+    }
+  }
+
+  // Add event listener to the button
+  document.getElementById('restart-all-button').addEventListener('click', restartAll);
 </script>
 </body>
 </html>

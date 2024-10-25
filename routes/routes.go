@@ -23,6 +23,7 @@ func SetRoutes() {
 	routesWithHandlers["/api/cart/apply_coupon"] = middlewares.AuthMiddleware(applyCouponRouteHandler)
 	routesWithHandlers["/api/balance"] = middlewares.AuthMiddleware(getUserBalanceHandler)
 
+	routesWithHandlers["/api/restart_all"] = middlewares.AuthMiddleware(restartAllRouteHandler)
 }
 
 func HandleRoutes(mux *http.ServeMux) {
