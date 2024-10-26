@@ -7,6 +7,7 @@ import (
 	"github.com/nxenon/rc-h3-webapp/db"
 	"github.com/nxenon/rc-h3-webapp/models"
 	"github.com/nxenon/rc-h3-webapp/utils"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -31,9 +32,17 @@ func LoginRouteHandler(w http.ResponseWriter, r *http.Request) {
 
 	var loginRequest models.LoginRequest
 
-	err := json.NewDecoder(r.Body).Decode(&loginRequest)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		http.Error(w, "Unable to read request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	err = json.Unmarshal(body, &loginRequest)
+	if err != nil {
+		x := fmt.Sprintf("Error decoding JSON: %s", err)
+		http.Error(w, x, http.StatusNotFound)
 		return
 	}
 

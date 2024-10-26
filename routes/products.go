@@ -6,6 +6,7 @@ import (
 	"github.com/nxenon/rc-h3-webapp/db"
 	"github.com/nxenon/rc-h3-webapp/models"
 	"github.com/nxenon/rc-h3-webapp/utils"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -49,10 +50,21 @@ func addProductRouteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req models.AddProductRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Unable to read request body", http.StatusBadRequest)
 		return
 	}
+	defer r.Body.Close()
+
+	err = json.Unmarshal(body, &req)
+	if err != nil {
+		x := fmt.Sprintf("Error decoding JSON: %s", err)
+		http.Error(w, x, http.StatusNotFound)
+		return
+	}
+
 	// Call AddProductToUserCart
 	if err := db.AddProductToUserCart(userId, req.ProductId); err != nil {
 		http.Error(w, "Failed to add product to cart: "+err.Error(), http.StatusInternalServerError)
@@ -71,8 +83,18 @@ func removeProductHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req models.RemoveProductRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Unable to read request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	err = json.Unmarshal(body, &req)
+	if err != nil {
+		x := fmt.Sprintf("Error decoding JSON: %s", err)
+		http.Error(w, x, http.StatusNotFound)
 		return
 	}
 
