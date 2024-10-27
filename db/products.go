@@ -243,16 +243,24 @@ func RemoveProductFromCartByUserIdInRedisDb(productInCartUUID string, userId int
 	}
 
 	var tempProducts []models.ProductObject
+	var productExists bool
+	productExists = false
 	for _, p := range userCart.Products {
 		if p.ProductInCartUUID != productInCartUUID {
 			tempProducts = append(tempProducts, p)
 		} else {
+			productExists = true
 			userCart.CartOverallPrice -= p.ProductPrice
 		}
 	}
 
 	userCart.Products = tempProducts
 	err2 := UpdateCartByUserIdInRedisDb(userId, userCart)
+	if err2 == nil {
+		if !productExists {
+			return fmt.Errorf("product does not exist")
+		}
+	}
 	return err2
 
 }

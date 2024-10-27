@@ -101,7 +101,11 @@ func removeProductHandler(w http.ResponseWriter, r *http.Request) {
 	// remove product from user cart by models.RemoveProductRequest.ProductInCartId
 	err2 := db.RemoveProductFromCartByUserId(req.ProductInCartUUID, userId)
 	if err2 != nil {
-		http.Error(w, "Error removing product from cart!", http.StatusInternalServerError)
+		if err2.Error() == "product does not exist" {
+			http.Error(w, fmt.Sprintf("Error removing product from cart: %s", err2), http.StatusNotFound)
+			return
+		}
+		http.Error(w, fmt.Sprintf("Error removing product from cart: %s", err2), http.StatusInternalServerError)
 		return
 	}
 
