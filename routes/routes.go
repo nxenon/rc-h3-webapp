@@ -23,6 +23,9 @@ func SetRoutes() {
 	routesWithHandlers["/api/cart/apply_coupon"] = middlewares.AuthMiddleware(applyCouponRouteHandler)
 	routesWithHandlers["/api/balance"] = middlewares.AuthMiddleware(getUserBalanceHandler)
 
+	routesWithHandlers["/api/transfer_balance"] = middlewares.AuthMiddleware(transferBalanceRouteHandler)
+	routesWithHandlers["/transfer_balance"] = middlewares.AuthMiddleware(transferBalanceFrontRouteHandler)
+
 	routesWithHandlers["/api/restart_all"] = middlewares.AuthMiddleware(restartAllRouteHandler)
 }
 

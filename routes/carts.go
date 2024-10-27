@@ -125,15 +125,15 @@ func getUserBalanceHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-	userObject, err := db.GetUserObjectByUserId(userId)
+	userBalance, err := db.GetUserBalanceFromRedisDb(userId)
 	if err != nil {
-		http.Error(w, "User Not Found", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Error: %s", err), http.StatusInternalServerError)
 		return
 	}
 
 	response := map[string]interface{}{
 		"success": true,
-		"balance": userObject.UserBalance,
+		"balance": userBalance,
 	}
 
 	json.NewEncoder(w).Encode(response)

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Balance</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- User Balance Display -->
+    <div class="alert alert-info text-center">
+        Your Balance: <span id="user-balance">0$</span>
+    </div>
+
+    <h1 class="text-center mb-4">Transfer Balance</h1>
+    <div class="card p-4">
+        <div class="form-group">
+            <label for="username">Recipient Username</label>
+            <input type="text" class="form-control" id="username" placeholder="Enter username">
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" class="form-control" id="amount" placeholder="Enter amount">
+        </div>
+        <button class="btn btn-primary" onclick="sendBalance()">Send Balance</button>
+    </div>
+</div>
+
+<!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Function to fetch and update user balance
+    async function fetchUserBalance() {
+        try {
+            const response = await fetch('/api/balance');
+            if (!response.ok) {
+                console.error('Error fetching user balance.');
+                return;
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                const balanceElement = document.getElementById('user-balance');
+                balanceElement.textContent = `${data.balance}$`; // Update balance display
+            } else {
+                console.error('Failed to fetch user balance.');
+            }
+        } catch (error) {
+            console.error('Error fetching user balance:', error);
+        }
+    }
+
+    // Fetch user balance every 2 seconds
+    setInterval(fetchUserBalance, 2000);
+
+    // Function to send balance transfer
+    async function sendBalance() {
+        const username = document.getElementById('username').value;
+        const amount = document.getElementById('amount').value;
+
+        try {
+            const response = await fetch('/api/transfer_balance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ToUsername: username, Amount: parseFloat(amount) })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                alert(`Error: ${errorData.message}`);
+                return;
+            }
+
+        } catch (error) {
+            console.error('Error transferring balance:', error);
+            alert('An error occurred while transferring the balance.');
+        }
+    }
+
+    // Fetch the initial balance on page load
+    document.addEventListener('DOMContentLoaded', fetchUserBalance);
+</script>
+</body>
+</html>
