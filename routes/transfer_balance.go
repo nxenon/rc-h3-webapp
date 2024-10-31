@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func transferBalanceRouteHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,6 +21,9 @@ func transferBalanceRouteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
+
+	nanoseconds := time.Now().UnixNano()
+	w.Header().Set("x-time", fmt.Sprintf("%d", nanoseconds))
 
 	err = json.Unmarshal(body, &request)
 	if err != nil {
