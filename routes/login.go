@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // LoginFrontRouteHandler /login -> only front
@@ -37,6 +38,9 @@ func LoginRouteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
+
+	nanoseconds := time.Now().UnixNano()
+	w.Header().Set("x-time", fmt.Sprintf("%d", nanoseconds))
 
 	err = json.Unmarshal(body, &loginRequest)
 	if err != nil {
