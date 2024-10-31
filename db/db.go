@@ -38,6 +38,7 @@ func DoChecks(appData utils.AppData) {
 	InsertDefaultUsers()
 	InsertDefaultProducts()
 	InsertDefaultCouponCodes()
+	ResetAllUserLoginAttemptsToZero()
 }
 
 func InsertDefaultUsers() {

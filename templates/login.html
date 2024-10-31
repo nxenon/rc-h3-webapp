@@ -108,54 +108,55 @@
         <label for="password">Password:</label>
         <input type="password" id="password" placeholder="Enter Password">
     </div>
-    <div class="input-group captcha">
-        <div id="captcha-container">
-            <img id="captcha-image" src="" class="captcha-image" alt="Captcha" onerror="showCaptchaError()">
-        </div>
-        <button onclick="refreshCaptcha()">
-            <span>&#8635;</span> <!-- Circular refresh icon -->
-        </button>
-    </div>
-    <div class="captcha-message" id="captcha-error-message"></div> <!-- Container for captcha error message -->
-    <div class="input-group">
-        <input type="text" id="captcha" placeholder="Enter Captcha">
-    </div>
+<!--    <div class="input-group captcha">-->
+<!--        <div id="captcha-container">-->
+<!--            <img id="captcha-image" src="" class="captcha-image" alt="Captcha" onerror="showCaptchaError()">-->
+<!--        </div>-->
+<!--        <button onclick="refreshCaptcha()">-->
+<!--            <span>&#8635;</span> &lt;!&ndash; Circular refresh icon &ndash;&gt;-->
+<!--        </button>-->
+<!--    </div>-->
+<!--    <div class="captcha-message" id="captcha-error-message"></div> &lt;!&ndash; Container for captcha error message &ndash;&gt;-->
+<!--    <div class="input-group">-->
+<!--        <input type="text" id="captcha" placeholder="Enter Captcha">-->
+<!--    </div>-->
     <button class="login-btn" onclick="login()">Login</button>
     <div class="error-message" id="error-message"></div>
 </div>
 
 <script>
-    let captchaID = '';
+    // let captchaID = '';
+    //
+    // // Fetch and refresh CAPTCHA
+    // function refreshCaptcha() {
+    //     fetch('/api/captcha')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             captchaID = data.captcha_id; // Store the captcha ID for later use
+    //             const captchaImage = document.getElementById('captcha-image');
+    //             captchaImage.src = 'data:image/png;base64,' + data.captcha_value; // Set base64 image source
+    //             document.getElementById('captcha-error-message').textContent = ''; // Clear any previous error message
+    //         })
+    //         .catch(err => {
+    //             console.error('Error fetching CAPTCHA:', err);
+    //             showCaptchaError();
+    //         });
+    // }
 
-    // Fetch and refresh CAPTCHA
-    function refreshCaptcha() {
-        fetch('/api/captcha')
-            .then(response => response.json())
-            .then(data => {
-                captchaID = data.captcha_id; // Store the captcha ID for later use
-                const captchaImage = document.getElementById('captcha-image');
-                captchaImage.src = 'data:image/png;base64,' + data.captcha_value; // Set base64 image source
-                document.getElementById('captcha-error-message').textContent = ''; // Clear any previous error message
-            })
-            .catch(err => {
-                console.error('Error fetching CAPTCHA:', err);
-                showCaptchaError();
-            });
-    }
-
-    // Show CAPTCHA error
-    function showCaptchaError() {
-        const captchaImage = document.getElementById('captcha-image');
-        document.getElementById('captcha-error-message').textContent = 'No Captcha'; // Show error message
-    }
+    // // Show CAPTCHA error
+    // function showCaptchaError() {
+    //     const captchaImage = document.getElementById('captcha-image');
+    //     document.getElementById('captcha-error-message').textContent = 'No Captcha'; // Show error message
+    // }
 
     // Login function
     function login() {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        const captchaValue = document.getElementById('captcha').value;
+        // const captchaValue = document.getElementById('captcha').value;
 
-        if (!username || !password || !captchaValue) {
+        // if (!username || !password || !captchaValue) {
+        if (!username || !password) {
             showError("All fields are required!");
             return;
         }
@@ -163,8 +164,8 @@
         const data = {
             username: username,
             password: password,
-            captcha_id: captchaID, // Add captcha ID to request
-            captcha_value: captchaValue
+            // captcha_id: captchaID, // Add captcha ID to request
+            // captcha_value: captchaValue
         };
 
         // Simulate an AJAX request using fetch

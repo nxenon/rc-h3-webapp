@@ -3,7 +3,6 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dchest/captcha"
 	"github.com/nxenon/rc-h3-webapp/db"
 	"github.com/nxenon/rc-h3-webapp/models"
 	"github.com/nxenon/rc-h3-webapp/utils"
@@ -46,19 +45,40 @@ func LoginRouteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if loginRequest.CaptchaValue == "111" {
-		// for testing purposes
-	} else {
-		if !captcha.VerifyString(loginRequest.CaptchaID, loginRequest.CaptchaValue) {
-			response := map[string]interface{}{
-				"success": false,
-				"message": "Invalid CAPTCHA",
-			}
-			json.NewEncoder(w).Encode(response)
-			w.WriteHeader(http.StatusForbidden)
-			return
+	isUserRateLimited, err := db.IsUserRateLimitedByUsername(loginRequest.Username)
+	if err != nil {
+		response := map[string]interface{}{
+			"success": false,
+			"message": "rate limit check failed",
 		}
+		json.NewEncoder(w).Encode(response)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
+
+	if isUserRateLimited {
+		response := map[string]interface{}{
+			"success": false,
+			"message": "User is Rate Limited! - Wait 15 Mins!",
+		}
+		json.NewEncoder(w).Encode(response)
+		w.WriteHeader(429)
+		return
+	}
+
+	//if loginRequest.CaptchaValue == "111" {
+	//	// for testing purposes
+	//} else {
+	//	if !captcha.VerifyString(loginRequest.CaptchaID, loginRequest.CaptchaValue) {
+	//		response := map[string]interface{}{
+	//			"success": false,
+	//			"message": "Invalid CAPTCHA",
+	//		}
+	//		json.NewEncoder(w).Encode(response)
+	//		w.WriteHeader(http.StatusForbidden)
+	//		return
+	//	}
+	//}
 
 	userObject, err := db.GetUserObjectByUsername(loginRequest.Username)
 	if err != nil {
@@ -69,6 +89,17 @@ func LoginRouteHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		json.NewEncoder(w).Encode(response)
 		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	err2 := db.IncreaseUserRateLimitByUsername(userObject.Username)
+	if err2 != nil {
+		response := map[string]interface{}{
+			"success": false,
+			"message": "Error in updating rate limit",
+		}
+		json.NewEncoder(w).Encode(response)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -85,6 +116,8 @@ func LoginRouteHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+
+		db.ResetUserRateLimitByUsername(userObject.Username)
 
 		response := map[string]interface{}{
 			"success": true,
