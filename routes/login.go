@@ -66,20 +66,6 @@ func LoginRouteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if loginRequest.CaptchaValue == "111" {
-	//	// for testing purposes
-	//} else {
-	//	if !captcha.VerifyString(loginRequest.CaptchaID, loginRequest.CaptchaValue) {
-	//		response := map[string]interface{}{
-	//			"success": false,
-	//			"message": "Invalid CAPTCHA",
-	//		}
-	//		json.NewEncoder(w).Encode(response)
-	//		w.WriteHeader(http.StatusForbidden)
-	//		return
-	//	}
-	//}
-
 	userObject, err := db.GetUserObjectByUsername(loginRequest.Username)
 	if err != nil {
 		fmt.Println("Error: ", err.Error())

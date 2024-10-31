@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #e0f7fa;
@@ -13,6 +14,12 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            flex-direction: column;
+        }
+        .top-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
         .login-container {
             background-color: #0277bd;
@@ -35,47 +42,12 @@
         }
         .input-group input {
             width: 100%;
-            max-width: 290px; /* Set maximum width */
-            padding: 5px; /* Reduced padding */
+            padding: 5px;
             margin-top: 5px;
             border: none;
             border-radius: 5px;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 14px; /* Adjust font size if needed */
-        }
-        .captcha {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .captcha img {
-            display: block;
-            border-radius: 5px;
-            max-width: 200px; /* Limit width for better layout */
-            height: auto; /* Maintain aspect ratio */
-            background: white;
-        }
-        .captcha button {
-            background-color: #fff; /* White background for better visibility */
-            border: 2px solid #0277bd; /* Border to make it stand out */
-            border-radius: 50%; /* Circular button */
-            cursor: pointer;
-            padding: 5px; /* Padding for the button */
-            margin-left: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center; /* Center the content */
-            width: 30px; /* Set a fixed width for the button */
-            height: 30px; /* Set a fixed height for the button */
-        }
-        .captcha button span {
-            font-size: 16px; /* Font size for the refresh icon */
-            font-weight: bold; /* Make the icon bold */
-            color: #0277bd; /* Match the color theme */
-        }
-        .captcha-message {
-            color: red; /* Error message color */
-            font-weight: bold;
+            font-size: 14px;
         }
         .login-btn {
             width: 100%;
@@ -98,6 +70,9 @@
     </style>
 </head>
 <body>
+<!-- Restart All button -->
+<button class="btn btn-danger top-button" id="restart-all-button">Restart All</button>
+
 <div class="login-container">
     <h2>Login</h2>
     <div class="input-group">
@@ -108,72 +83,38 @@
         <label for="password">Password:</label>
         <input type="password" id="password" placeholder="Enter Password">
     </div>
-<!--    <div class="input-group captcha">-->
-<!--        <div id="captcha-container">-->
-<!--            <img id="captcha-image" src="" class="captcha-image" alt="Captcha" onerror="showCaptchaError()">-->
-<!--        </div>-->
-<!--        <button onclick="refreshCaptcha()">-->
-<!--            <span>&#8635;</span> &lt;!&ndash; Circular refresh icon &ndash;&gt;-->
-<!--        </button>-->
-<!--    </div>-->
-<!--    <div class="captcha-message" id="captcha-error-message"></div> &lt;!&ndash; Container for captcha error message &ndash;&gt;-->
-<!--    <div class="input-group">-->
-<!--        <input type="text" id="captcha" placeholder="Enter Captcha">-->
-<!--    </div>-->
     <button class="login-btn" onclick="login()">Login</button>
     <div class="error-message" id="error-message"></div>
 </div>
 
 <script>
-    // let captchaID = '';
-    //
-    // // Fetch and refresh CAPTCHA
-    // function refreshCaptcha() {
-    //     fetch('/api/captcha')
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             captchaID = data.captcha_id; // Store the captcha ID for later use
-    //             const captchaImage = document.getElementById('captcha-image');
-    //             captchaImage.src = 'data:image/png;base64,' + data.captcha_value; // Set base64 image source
-    //             document.getElementById('captcha-error-message').textContent = ''; // Clear any previous error message
-    //         })
-    //         .catch(err => {
-    //             console.error('Error fetching CAPTCHA:', err);
-    //             showCaptchaError();
-    //         });
-    // }
-
-    // // Show CAPTCHA error
-    // function showCaptchaError() {
-    //     const captchaImage = document.getElementById('captcha-image');
-    //     document.getElementById('captcha-error-message').textContent = 'No Captcha'; // Show error message
-    // }
+    // Function to send a GET request when clicking "Restart All" button
+    document.getElementById('restart-all-button').addEventListener('click', () => {
+        fetch('/api/restart_all', { method: 'GET' })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to restart all.');
+                }
+                alert("Restart request sent.");
+            })
+            .catch(error => console.error('Error:', error));
+    });
 
     // Login function
     function login() {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        // const captchaValue = document.getElementById('captcha').value;
 
-        // if (!username || !password || !captchaValue) {
         if (!username || !password) {
             showError("All fields are required!");
             return;
         }
 
-        const data = {
-            username: username,
-            password: password,
-            // captcha_id: captchaID, // Add captcha ID to request
-            // captcha_value: captchaValue
-        };
+        const data = { username: username, password: password };
 
-        // Simulate an AJAX request using fetch
         fetch('/api/login', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
         })
             .then(response => {
@@ -182,32 +123,22 @@
                         showError(errorData.message || "Login failed.");
                     });
                 }
-                return response.json(); // Assuming the server responds with JSON
+                return response.json();
             })
             .then(data => {
-                // Handle success
                 if (data.success) {
-                    const now = new Date();
-                    const expirationTime = new Date(now.getTime() + 2 * 60 * 60 * 1000); // 2 hours from now
-                    document.cookie = `jwtToken=${data.jwt}; expires=${expirationTime.toUTCString()}; path=/; secure; SameSite=Strict`;
-                    window.location.href = '/products'; // Redirect to the desired page
+                    document.cookie = `jwtToken=${data.jwt}; path=/; secure; SameSite=Strict`;
+                    window.location.href = '/products';
                 } else {
                     showError(data.message || "Invalid credentials.");
                 }
             })
-            .catch(err => {
-                showError("An error occurred: " + err.message);
-            });
+            .catch(err => showError("An error occurred: " + err.message));
     }
 
-    // Show error message
     function showError(message) {
-        const errorMessage = document.getElementById('error-message');
-        errorMessage.textContent = message;
+        document.getElementById('error-message').textContent = message;
     }
-
-    // Initialize and load CAPTCHA when the page is ready
-    window.onload = refreshCaptcha;
 </script>
 </body>
 </html>

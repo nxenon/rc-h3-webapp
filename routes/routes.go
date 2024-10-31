@@ -26,7 +26,8 @@ func SetRoutes() {
 	routesWithHandlers["/api/transfer_balance"] = middlewares.AuthMiddleware(transferBalanceRouteHandler)
 	routesWithHandlers["/transfer_balance"] = middlewares.AuthMiddleware(transferBalanceFrontRouteHandler)
 
-	routesWithHandlers["/api/restart_all"] = middlewares.AuthMiddleware(restartAllRouteHandler)
+	//routesWithHandlers["/api/restart_all"] = middlewares.AuthMiddleware(restartAllRouteHandler)
+	routesWithHandlers["/api/restart_all"] = restartAllRouteHandler
 }
 
 func HandleRoutes(mux *http.ServeMux) {
