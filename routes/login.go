@@ -117,7 +117,16 @@ func LoginRouteHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		db.ResetUserRateLimitByUsername(userObject.Username)
+		err3 := db.ResetUserRateLimitByUsername(userObject.Username)
+		if err3 != nil {
+			response := map[string]interface{}{
+				"success": false,
+				"message": "Error in resetting username rate limit to 0 after success login",
+			}
+			json.NewEncoder(w).Encode(response)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 
 		response := map[string]interface{}{
 			"success": true,
