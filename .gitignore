@@ -2,3 +2,5 @@
 client
 .env
 archives/
+.env.bak
+exploits

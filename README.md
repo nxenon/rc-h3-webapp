@@ -1,4 +1,5 @@
 # HTTP/2 & HTTP/3 Race Condition Lab (Web Application)
+HTTP/1/2/3 Web Application for testing Last Frame Synchronization (also known as Single Packet Attack) on HTTP/2 and HTTP/3. 
 
 ## Run the App
 
@@ -7,7 +8,7 @@ go run ./webapp.go
 ```
 
 ## .env File
-
+You have to fill .env file before run the app. The app creates .env file when it gets run at first time.
 ```env
 CertPath=CERT_PATH
 KeyPath=KEY_PATH
@@ -20,6 +21,10 @@ MySqlUser=USERNAME
 MySqlPass=PASSWORD
 MySqlDbName=DB_NAME
 DbType=mysql
+RedisAddr=127.0.0.1:6379
+RedisDbPass=
+RedisDbID=0
+MaxIncomingStreams=100
 ```
 
 ## Login
