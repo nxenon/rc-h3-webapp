@@ -2,6 +2,11 @@
 HTTP/1/2/3 Web Application for testing Last Frame Synchronization (also known as Single Packet Attack) on HTTP/2 and HTTP/3.
 For see the exploitation tool and reference go to [H3SpaceX Library](https://github.com/nxenon/h3spacex).
 
+Features:
+- Apply Coupon Code on User Cart
+- Transfer User Balance to another User
+- Login Rate Limit Per User
+
 ## Run the App
 
 ```shell
